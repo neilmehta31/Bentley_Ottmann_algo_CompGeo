@@ -263,6 +263,7 @@ statusQueueNode* getAddress(statusQueueNode* root, segment seg) {
     if(root == NULL)
         return NULL;
     int compare_val = compare(root->seg, seg);
+    
     if(compare_val < 0) 
         return getAddress(root->right, seg);
     else if(compare_val > 0) 
@@ -324,9 +325,14 @@ int main()
 
     // root = deleteNode(root, lseg[1]);
 
-    segment s
-    statusQueueNode* seg = getAddress(root, seg);
-    cout << getRightNeighbor(root, seg);
+    segment s;
+    s.pstart.x = 3;
+    s.pstart.y = 4;
+    s.pend.x = 1;
+    s.pend.y = 2;
+    statusQueueNode* seg = getAddress(root, s);
+    cout << seg;
+    // cout << getRightNeighbor(root, seg);
 
     // vector<statusQueueNode*> neighbors = getNeighbors(root, lseg[2]);
     

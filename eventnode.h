@@ -1,13 +1,18 @@
 #include "utils.h"
 
-class eventNode {
+class eventNode
+{
 public:
     double X, Y, ht;
     eventNode *left, *right;
     segment s;
     int upperEndpoint;
-    
-    eventNode(double X, double Y,int upperEndpoint,segment seg) {
+    vector<segment> U;
+    vector<segment> L;
+    vector<segment> C;
+
+    eventNode(double X, double Y, int upperEndpoint, segment seg)
+    {
         this->X = X;
         this->Y = Y;
         this->upperEndpoint = upperEndpoint;

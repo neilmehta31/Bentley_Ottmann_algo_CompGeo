@@ -1,5 +1,4 @@
 
-void handleEventPoint(point p){
-
-
+void handleEventPoint(point p)
+{
 }
