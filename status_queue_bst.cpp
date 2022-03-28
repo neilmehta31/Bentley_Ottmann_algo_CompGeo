@@ -175,11 +175,10 @@ statusQueueNode* deleteNode(statusQueueNode* root, segment s)
     return root;
 }
 
-statusQueueNode* minValue(statusQueueNode* node)
+statusQueueNode* getMinValue(statusQueueNode* node)
 {
     statusQueueNode* current = node;
-    while (current->left != NULL)
-    {
+    while (current->left != NULL) {
         current = current->left;
     }
     return current;
@@ -188,8 +187,6 @@ statusQueueNode* minValue(statusQueueNode* node)
 
 statusQueueNode* inOrderSuccessor(statusQueueNode* root, statusQueueNode* n)
 {
-     
-    // Step 1 of the above algorithm
     if (n->right != NULL)
         return minValue(n->right);
     
