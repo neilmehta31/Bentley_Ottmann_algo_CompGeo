@@ -60,8 +60,8 @@ int main()
     eventNode *eventQueueRoot = NULL;
     for (int i = 0; i < lseg.size(); i++)
     {
-        eventQueueRoot = eq.insert(eventQueueRoot, lseg[i].pstart.x, lseg[i].pstart.y, 1, lseg[i]); // last parameter for checking if it is upper or not.
-        eventQueueRoot = eq.insert(eventQueueRoot, lseg[i].pend.x, lseg[i].pend.y, 0, lseg[i]);
+        eventQueueRoot = eq.insert(eventQueueRoot, lseg[i].pstart.x, lseg[i].pstart.y, 1, 0, lseg[i]); // 1,0 for p on upper endpoint of the segment
+        eventQueueRoot = eq.insert(eventQueueRoot, lseg[i].pend.x,   lseg[i].pend.y,   0, 1, lseg[i]); // 0,1 for p on lower endpoint of the segment
     }
 
     eq.inOrder(eventQueueRoot);

@@ -67,15 +67,24 @@ private:
     }
 
 public:
-    eventNode *insert(eventNode *node, double X, double Y, int upperEndpoint, segment s)
+    eventNode *insert(eventNode *node, double X, double Y, int upperEndpoint, int lowerEndpoint, segment s)
     {
-        if (node == NULL)
-            return new eventNode(X, Y, upperEndpoint, s);
+        if (node == NULL){
+            eventNode *eventnode = new eventNode(X, Y, upperEndpoint, lowerEndpoint, s);
+            if(upperEndpoint){
+                eventnode->U.push_back(s);
+            }else if(lowerEndpoint){
+                eventnode->L.push_back(s);
+            }else{
+                eventnode->C.push_back(s);
+            }
+            return eventnode;
+        }
 
         if (Y < node->Y || (Y == node->Y && X > node->X))
-            node->left = insert(node->left, X, Y, upperEndpoint, s);
+            node->left = insert(node->left, X, Y, upperEndpoint,lowerEndpoint, s);
         else if (Y > node->Y || (Y == node->Y && X < node->X))
-            node->right = insert(node->right, X, Y, upperEndpoint, s);
+            node->right = insert(node->right, X, Y, upperEndpoint,lowerEndpoint, s);
         else
             return node;
 

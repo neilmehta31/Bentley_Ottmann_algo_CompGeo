@@ -193,28 +193,29 @@ statusQueueNode* getMaxValue(statusQueueNode* node)
     return current;
 } 
 
-statusQueueNode* getLeftNeighbor(statusQueueNode* root, statusQueueNode n)
+statusQueueNode* getLeftNeighbor(statusQueueNode* root, statusQueueNode* n)
 {
-    if (n.left != NULL)
-        return getMaxValue(n.left);
-    
+    if (n->left != NULL)
+        return getMaxValue(n->left);
  
-    statusQueueNode* succ = NULL;
+    statusQueueNode* pred = NULL;
 
     while (root != NULL) {
-        int compare_val = compare(n.seg, root->seg);
-        if (compare_val < 0)
-        {
-            succ = root;
+        int compare_val = compare(n->seg, root->seg);
+        if (compare_val < 0) {
             root = root->left;
         }
-        else if (compare_val > 0)
+        else if (compare_val > 0) {
+            cout << (*root).seg.pstart.x <<" "<<(*root).seg.pstart.y;
+            cout << "Yoo";
+            pred = root;
             root = root->right;
+        }
         else
             break;
     }
  
-    return succ;
+    return pred;
 }
 
 statusQueueNode* getRightNeighbor(statusQueueNode* root, statusQueueNode* n)
@@ -236,7 +237,7 @@ statusQueueNode* getRightNeighbor(statusQueueNode* root, statusQueueNode* n)
         else
             break;
     }
-    
+
     return succ;
 }
 
@@ -249,15 +250,15 @@ void inOrder(statusQueueNode *root) {
     inOrder(root->right);
 }
 
-// vector<statusQueueNode*> getNeighbors(statusQueueNode* root, segment s) 
-// {
-//     vector<statusQueueNode*> res;
+vector<statusQueueNode*> getNeighbors(statusQueueNode* root, statusQueueNode* s) 
+{
+    vector<statusQueueNode*> res;
 
-//     // res.push_back(getLeftNeighbor(root, s));
-//     res.push_back(getRightNeighbor(root, s));
+    res.push_back(getLeftNeighbor(root, s));
+    // res.push_back(getRightNeighbor(root, s));
 
-//     return res;
-// }
+    return res;
+}
 
 statusQueueNode* getAddress(statusQueueNode* root, segment seg) {
     if(root == NULL)
@@ -331,16 +332,13 @@ int main()
     s.pend.x = 1;
     s.pend.y = 2;
     statusQueueNode* seg = getAddress(root, s);
-    cout << seg;
-    // cout << getRightNeighbor(root, seg);
-
-    // vector<statusQueueNode*> neighbors = getNeighbors(root, lseg[2]);
     
-    // for(auto neighbor: neighbors) {
-    //     cout << neighbor <<" ";
-    //      cout <<"("<< (*neighbor).seg.pstart.x; 
-    // <<","<< (*neighbor).seg.pstart.y <<" "<< (*neighbor).seg.pend.x <<","<<(*neighbor).seg.pend.y <<") ";   
-    // }
+    vector<statusQueueNode*> neighbors = getNeighbors(root, seg);
+    
+    for(auto neighbor: neighbors) {
+        cout << neighbor <<" ";
+        // cout <<"("<< (*neighbor).seg.pstart.x <<","<< (*neighbor).seg.pstart.y <<" "<< (*neighbor).seg.pend.x <<","<<(*neighbor).seg.pend.y <<") ";   
+    }
 
     // root = insert(root, s1);
     // root = insert(root, s2);
