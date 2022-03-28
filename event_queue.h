@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#include "Eventnode.h"
+#include "node.h"
 using namespace std;
 
 class EventQueue {
@@ -60,15 +60,15 @@ private:
     }
 
 public:
-    Node* insert(Node* node, double X, double Y,int upper)
+    Node* insert(Node* node, double X, double Y,int upperEndpoint,segment s)
     {
         if (node == NULL)
-            return new Node(X, Y);
+            return new Node(X, Y,upperEndpoint,s);
         
         if (Y < node->Y || (Y == node->Y && X > node->X))
-            node->left = insert(node->left, X, Y);
+            node->left = insert(node->left, X, Y,upperEndpoint,s);
         else if (Y > node->Y || (Y == node->Y && X < node->X))
-            node->right = insert(node->right, X, Y);
+            node->right = insert(node->right, X, Y,upperEndpoint,s);
         else
             return node;
 

@@ -1,3 +1,5 @@
+#include "utils.h"
+
 class Node {
 public:
     double X, Y, ht;
@@ -8,11 +10,8 @@ public:
     Node(double X, double Y,int upperEndpoint,segment seg) {
         this->X = X;
         this->Y = Y;
-        if(upperEndpoint){
-            this->s = seg;
-        }else{
-            this->s = NULL;
-        }
+        this->upperEndpoint = upperEndpoint;
+        this->s = seg;
         ht = 1;
         left = right = NULL;
     }

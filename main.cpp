@@ -1,10 +1,7 @@
 #include <bits/stdc++.h>
 #include <fstream>
-#include <string>
 #include "event_queue.h"
-#include "utils.h"
 #include "handleEventPoint.h"
-using namespace std;
 
 int main(){
     EventQueue eq;
@@ -54,6 +51,8 @@ int main(){
         eventQueueRoot = eq.insert(eventQueueRoot,lseg[i].pstart.x,lseg[i].pstart.y,1,lseg[i]);//last parameter for checking if it is upper or not.
         eventQueueRoot = eq.insert(eventQueueRoot,lseg[i].pend.x,lseg[i].pend.y,0,lseg[i]);
     }
+
+    eq.inOrder(eventQueueRoot);
 
     while(!eq.isEmpty(eventQueueRoot)){
         Node *p = eq.getnextEventPoint(eventQueueRoot);

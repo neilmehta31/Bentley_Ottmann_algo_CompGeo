@@ -183,31 +183,60 @@ statusQueueNode* getMinValue(statusQueueNode* node)
     }
     return current;
 }
- 
 
-statusQueueNode* inOrderSuccessor(statusQueueNode* root, statusQueueNode* n)
+statusQueueNode* getMaxValue(statusQueueNode* node)
 {
-    if (n->right != NULL)
-        return minValue(n->right);
+    statusQueueNode* current = node;
+    while (current->right != NULL) {
+        current = current->right;
+    }
+    return current;
+} 
+
+statusQueueNode* getLeftNeighbor(statusQueueNode* root, statusQueueNode n)
+{
+    if (n.left != NULL)
+        return getMaxValue(n.left);
     
  
-    struct node* succ = NULL;
- 
-    // Start from root and search for
-    // successor down the tree
-    while (root != NULL)
-    {
-        if (n->data < root->data)
+    statusQueueNode* succ = NULL;
+
+    while (root != NULL) {
+        int compare_val = compare(n.seg, root->seg);
+        if (compare_val < 0)
         {
             succ = root;
             root = root->left;
         }
-        else if (n->data > root->data)
+        else if (compare_val > 0)
             root = root->right;
         else
             break;
     }
  
+    return succ;
+}
+
+statusQueueNode* getRightNeighbor(statusQueueNode* root, statusQueueNode* n)
+{
+    if (n->right != NULL)
+        return getMinValue(n->right);
+ 
+    statusQueueNode* succ = NULL;
+
+    while (root != NULL) {
+        int compare_val = compare(n->seg, root->seg);
+        if (compare_val < 0)
+        {
+            succ = root;
+            root = root->left;
+        }
+        else if (compare_val > 0)
+            root = root->right;
+        else
+            break;
+    }
+    
     return succ;
 }
 
@@ -220,16 +249,19 @@ void inOrder(statusQueueNode *root) {
     inOrder(root->right);
 }
 
-statusQueueNode getLeftNeighbor(statusQueueNode* root, segment s)
+vector<statusQueueNode*> getNeighbors(statusQueueNode* root, segment s) 
 {
-    statusQueueNode 
+    vector<statusQueueNode*> res;
+
+    // res.push_back(getLeftNeighbor(root, s));
+    res.push_back(getRightNeighbor(root, s));
+
+    return res;
 }
 
-vector<statusQueueNode> getNeighbors(statusQueueNode* root, segment s) 
-{
-    vector<statusQueueNode> res;
-    res.push_back(getLeftNeighbor(root, s));
-    res.push_back(getRightNeighbor(root, s));
+statusQueueNode* getAddress(statusQueueNode* root, segment seg) {
+    int compare_val = compare(root->seg, seg);
+    if()
 }
 
 int main()
@@ -280,13 +312,26 @@ int main()
         root = insert(root, seg);
     }
 
-    inOrder(root); 
-    cout << endl;
+    // inOrder(root); 
+    // cout << endl;
 
-    root = deleteNode(root, lseg[1]);
+    // root = deleteNode(root, lseg[1]);
+
+
+    statusQueueNode* seg = getAddress(root, seg);
+    cout << getRightNeighbor(root, seg);
+
+    // vector<statusQueueNode*> neighbors = getNeighbors(root, lseg[2]);
+    
+    // for(auto neighbor: neighbors) {
+    //     cout << neighbor <<" ";
+    //      cout <<"("<< (*neighbor).seg.pstart.x; 
+    // <<","<< (*neighbor).seg.pstart.y <<" "<< (*neighbor).seg.pend.x <<","<<(*neighbor).seg.pend.y <<") ";   
+    // }
+
     // root = insert(root, s1);
     // root = insert(root, s2);
     // root = insert(root, s3);
-    inOrder(root); 
-    cout << endl;
+    // inOrder(root); 
+    // cout << endl;
 }
