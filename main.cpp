@@ -46,7 +46,7 @@ int main(){
     // }
 
     // Find intersections!
-    Node *eventQueueRoot = NULL;
+    eventNode *eventQueueRoot = NULL;
     for(int i=0;i<lseg.size();i++){
         eventQueueRoot = eq.insert(eventQueueRoot,lseg[i].pstart.x,lseg[i].pstart.y,1,lseg[i]);//last parameter for checking if it is upper or not.
         eventQueueRoot = eq.insert(eventQueueRoot,lseg[i].pend.x,lseg[i].pend.y,0,lseg[i]);
@@ -55,7 +55,7 @@ int main(){
     eq.inOrder(eventQueueRoot);
 
     while(!eq.isEmpty(eventQueueRoot)){
-        Node *p = eq.getnextEventPoint(eventQueueRoot);
+        eventNode *p = eq.getnextEventPoint(eventQueueRoot);
         // cout<<p->X<<" "<<p->Y<<endl;
         point pnt;
         pnt.x = p->X;

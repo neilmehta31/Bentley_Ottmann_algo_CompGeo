@@ -249,19 +249,26 @@ void inOrder(statusQueueNode *root) {
     inOrder(root->right);
 }
 
-vector<statusQueueNode*> getNeighbors(statusQueueNode* root, segment s) 
-{
-    vector<statusQueueNode*> res;
+// vector<statusQueueNode*> getNeighbors(statusQueueNode* root, segment s) 
+// {
+//     vector<statusQueueNode*> res;
 
-    // res.push_back(getLeftNeighbor(root, s));
-    res.push_back(getRightNeighbor(root, s));
+//     // res.push_back(getLeftNeighbor(root, s));
+//     res.push_back(getRightNeighbor(root, s));
 
-    return res;
-}
+//     return res;
+// }
 
 statusQueueNode* getAddress(statusQueueNode* root, segment seg) {
+    if(root == NULL)
+        return NULL;
     int compare_val = compare(root->seg, seg);
-    if()
+    if(compare_val < 0) 
+        return getAddress(root->right, seg);
+    else if(compare_val > 0) 
+        return getAddress(root->left, seg);
+    else
+        return root;
 }
 
 int main()
@@ -317,7 +324,7 @@ int main()
 
     // root = deleteNode(root, lseg[1]);
 
-
+    segment s
     statusQueueNode* seg = getAddress(root, seg);
     cout << getRightNeighbor(root, seg);
 

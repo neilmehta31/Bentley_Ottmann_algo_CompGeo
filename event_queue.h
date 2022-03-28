@@ -1,15 +1,15 @@
 #include <bits/stdc++.h>
-#include "node.h"
+#include "eventnode.h"
 using namespace std;
 
 class EventQueue {
 public:
-    int height(Node *node) {
+    int height(eventNode *node) {
         return (node == NULL)? 0: node->ht;
     }
 
 public:
-    Node* getnextEventPoint(Node* node){
+    eventNode* getnextEventPoint(eventNode* node){
         while(node->right!=NULL){
             node = node->right;
         }
@@ -17,7 +17,7 @@ public:
     }
 
 public:
-    bool isEmpty(Node *node){
+    bool isEmpty(eventNode *node){
         if(node==NULL){
             return true;
         }
@@ -25,15 +25,15 @@ public:
     }
 
 private:
-    int getBalance(Node *node) {
+    int getBalance(eventNode *node) {
         return (node == NULL)? 0: height(node->left) - height(node->right);
     }
 
 private:
-    Node *leftRotate(Node *node)
+    eventNode *leftRotate(eventNode *node)
     {
-        Node *right = node->right;
-        Node *right_left = right->left;
+        eventNode *right = node->right;
+        eventNode *right_left = right->left;
 
         right->left = node;
         node->right = right_left;
@@ -45,10 +45,10 @@ private:
     }
 
 private:
-    Node *rightRotate(Node *node)
+    eventNode *rightRotate(eventNode *node)
     {
-        Node *left = node->left;
-        Node *left_right = left->right;
+        eventNode *left = node->left;
+        eventNode *left_right = left->right;
 
         left->right = node;
         node->left = left_right;
@@ -60,10 +60,10 @@ private:
     }
 
 public:
-    Node* insert(Node* node, double X, double Y,int upperEndpoint,segment s)
+    eventNode* insert(eventNode* node, double X, double Y,int upperEndpoint,segment s)
     {
         if (node == NULL)
-            return new Node(X, Y,upperEndpoint,s);
+            return new eventNode(X, Y,upperEndpoint,s);
         
         if (Y < node->Y || (Y == node->Y && X > node->X))
             node->left = insert(node->left, X, Y,upperEndpoint,s);
@@ -98,7 +98,7 @@ public:
     }
 
 public:
-    void inOrder(Node *root) 
+    void inOrder(eventNode *root) 
     {
         if(root == NULL)
             return;
@@ -109,12 +109,12 @@ public:
     }
 
 public:
-    void levelOrder(Node* root) {
-        queue<Node*> que;
+    void levelOrder(eventNode* root) {
+        queue<eventNode*> que;
         que.push(root);
 
         while(!que.empty()) {
-            Node* curr = que.front();
+            eventNode* curr = que.front();
             que.pop();
             cout <<"("<< curr->X <<" "<< curr->Y << ") ";
 
@@ -127,9 +127,9 @@ public:
         cout << endl;
     }
 public:
-    Node* getInorderSuccessor(Node* node)
+    eventNode* getInorderSuccessor(eventNode* node)
     {
-        Node* curr = node;
+        eventNode* curr = node;
 
         while (curr->left)
             curr = curr->left;
@@ -138,7 +138,7 @@ public:
     }
 
 public:
-    Node* deleteNode(Node* root, int X, int Y)
+    eventNode* deleteNode(eventNode* root, int X, int Y)
     {
         if (root == NULL)
             return root;
@@ -151,17 +151,17 @@ public:
 
         else {
             if(root->left == NULL) {
-                Node* temp = root->right;
+                eventNode* temp = root->right;
                 free(root);
                 root = temp;
             }
             else if(root->right == NULL) {
-                Node* temp = root->left;
+                eventNode* temp = root->left;
                 free(root);
                 root = temp;
             }
             else {
-                Node* inorderSuccessor = getInorderSuccessor(root->right);
+                eventNode* inorderSuccessor = getInorderSuccessor(root->right);
                 root->X = inorderSuccessor->X;
                 root->Y = inorderSuccessor->Y;
                 root->right = deleteNode(root->right, inorderSuccessor->X, inorderSuccessor->Y);
@@ -198,7 +198,7 @@ public:
 };
 
 // int main() {
-// 	Node *root = NULL;
+// 	eventNode *root = NULL;
 // 	EventQueue eq;
 //     root = eq.insert(root, 1, 10);
 //     root = eq.insert(root, 1, 20);
