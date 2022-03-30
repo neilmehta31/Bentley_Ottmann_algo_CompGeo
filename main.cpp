@@ -74,15 +74,15 @@ int main()
     while (!eq.isEmpty(temp)) {
         eventNode *p = eq.getnextEventPoint(temp);
         cout<<"statusQueueRoot in main before passing: "<<statusQueueRoot<<endl;
-        statusQueueRoot = handleEventPoint(statusQueueRoot, p, sq, eq);
+        statusQueueRoot = handleEventPoint(statusQueueRoot, p, sq,eq);
         temp = eq.deleteNode(temp, p->X, p->Y);
     }
 
-    // fout.open("intersection_points.txt");
+    fout.open("intersection_points.txt");
 
-    // for (int i=0; i<intersection_points.size(); i++) {
-    // 	fout<<intersection_points[i].x<<" "<<intersection_points[i].y<<endl;
-    // }
+    for (int i=0; i<intersections.size(); i++) {
+    	fout<<intersections[i].x<<" "<<intersections[i].y<<endl;
+    }
 
     fout.close();
 

@@ -1,6 +1,6 @@
 #include <float.h>
 #include "status_queue_bst.h"
-// #include "findnewevent.h"
+#include "findnewevent.h"
 
 vector<point> intersections;
 
@@ -39,6 +39,7 @@ statusQueueNode *handleEventPoint(statusQueueNode *sqnode, eventNode *evntnode, 
     point pnt;
     pnt.x = evntnode->X;
     pnt.y = evntnode->Y;
+    cout<<"POINT=>"<<pnt.x<<pnt.y<<endl;
     // cout<<LUC_P.size()<<endl;
     if (LUC_P.size() > 1)
     {
@@ -80,18 +81,35 @@ statusQueueNode *handleEventPoint(statusQueueNode *sqnode, eventNode *evntnode, 
         statusQueueNode *segpointer = sq.getAddress(sqnode, seg);        
         cout<<"seg_ptr: "<< segpointer << endl;
         p_neighbours = sq.getNeighbors(sqnode, segpointer);
-        int right=0;
-        for(auto neighbour:p_neighbours){
 
-            if(neighbour!=NULL){
-                if(right==0)
-                    {sl = p_neighbours[0]->seg;}
-                else
-                    {sr = p_neighbours[1]->seg;}
+        if(!(p_neighbours[0] == NULL && p_neighbours[1] == NULL)) {
+            sl = p_neighbours[0]->seg;
+            sr = p_neighbours[1]->seg;
+            point p = findnewEvent(sl, sr, pnt);
+            if(!(p.x == FLT_MAX && p.y == FLT_MAX)) {
+                evntnode = eq.insert(evntnode, p.x, p.y, 0, 0, seg); // 0,0 for p on C of segment
             }
-            counter++;
         }
-        findnewEvent(sl, sr, pnt);
+        // int right=0;
+        // for(auto neighbour:p_neighbours){
+
+        //     if(neighbour!=NULL){
+        //         if(right==0)
+        //             {sl = p_neighbours[0]->seg;}
+        //         else
+        //             {sr = p_neighbours[1]->seg;}
+        //     }
+
+        //     if(sl!=NULL || sr!=NULL){
+        //         point p = findnewEvent(sl, sr, pnt);
+        //             if(!(p.x == FLT_MAX && p.y == FLT_MAX)) {
+        //                 evntnode = eq.insert(evntnode, p.x, p.y, 0, 0, seg); // 0,0 for p on C of segment
+        //             }
+        //     }
+        //     right++;
+        // }
+        
+        // findnewEvent(sl, sr, pnt);
     }else{
 
         segment sdash, sdoubledash, sl_dash, sr_doubledash;
@@ -130,7 +148,7 @@ statusQueueNode *handleEventPoint(statusQueueNode *sqnode, eventNode *evntnode, 
         sdash_neighbours = sq.getNeighbors(sqnode, segpointer);
         for(auto n:sdash_neighbours){
             if(n==NULL){
-                cout<<"NULL val in get neighbours";
+                cout<<"NULL val in get neighbours ";
             }
             else 
                 cout<<"segment = ("<<n->seg.pstart.x<<","<<n->seg.pstart.y<<endl;
@@ -138,7 +156,27 @@ statusQueueNode *handleEventPoint(statusQueueNode *sqnode, eventNode *evntnode, 
         if(sdash_neighbours[0] != NULL) {
             sl_dash = sdash_neighbours[0]->seg;
             cout<<"left neighbour : "<<sl_dash.pstart.x<<sl_dash.pstart.y<<endl;
-            findnewEvent(sl_dash, sdash, pnt);
+            // findnewEvent(sl_dash, sdash, pnt);
+            point p = findnewEvent(sl_dash, sdash, pnt);
+
+            if(!(p.x == FLT_MAX && p.y == FLT_MAX)) {
+                // segment seg_new1,seg_new2;
+                // seg_new1.pstart.x = p.x;
+                // seg_new1.pstart.y = p.y;
+                // seg_new1.pend.x = sdash.pend.x;
+                // seg_new1.pend.y = sdash.pend.y;
+
+                // seg_new2.pstart.x = p.x;
+                // seg_new2.pstart.y = p.y;
+                // seg_new2.pend.x = sl_dash.pend.x;
+                // seg_new2.pend.y = sl_dash.pend.y;
+
+                // evntnode = sq.deleteNode(sqnode,sdash);
+                // evntnode = sq.deleteNode(sqnode,sl_dash);
+                // evntnode = eq.insert(evntnode, p.x, p.y, 0, 0, sl_dash); // 0,0 for p on C of segment
+                evntnode = eq.insert(evntnode, p.x, p.y, 0, 0, sdash); 
+                intersections.push_back(p);
+            }
         }
         
         segpointer = sq.getAddress(sqnode, sdoubledash);
@@ -150,8 +188,22 @@ statusQueueNode *handleEventPoint(statusQueueNode *sqnode, eventNode *evntnode, 
 
             // point p = findnewEvent(lseg[1], lseg[0], p_);
             if(!(p.x == FLT_MAX && p.y == FLT_MAX)) {
+                // segment seg_new1,seg_new2;
+                // seg_new1.pstart.x = p.x;
+                // seg_new1.pstart.y = p.y;
+                // seg_new1.pend.x = sdoubledash.pend.x;
+                // seg_new1.pend.y = sdoubledash.pend.y;
+
+                // seg_new2.pstart.x = p.x;
+                // seg_new2.pstart.y = p.y;
+                // seg_new2.pend.x = sr_doubledash.pend.x;
+                // seg_new2.pend.y = sr_doubledash.pend.y;
+
+                // evntnode = sq.deleteNode(sqnode,sdoubledash);
+                // evntnode = sq.deleteNode(sqnode,sr_doubledash);
+                // evntnode = eq.insert(evntnode, p.x, p.y, 0, 0, seg_new1); // 0,0 for p on C of segment
                 evntnode = eq.insert(evntnode, p.x, p.y, 0, 0, sdoubledash); // 0,0 for p on C of segment
-                evntnode = eq.insert(evntnode, p.x, p.y, 0, 0, sr_doubledash); 
+                intersections.push_back(p);
             }
         }
     }
