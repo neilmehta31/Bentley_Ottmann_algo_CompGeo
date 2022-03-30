@@ -65,6 +65,13 @@ private:
 
         return left;
     }
+private:
+    bool liesOn(point p, segment s){
+        if(((p.y-s.pstart.y)/(p.x - s.pstart.x))==((p.y-s.pend.y)/(p.x - s.pend.x))){ //If slope is equal on both the sides then point lies on the line segment
+            return true;
+        }
+        return false;
+    }
 
 public:
     eventNode *insert(eventNode *node, double X, double Y, int upperEndpoint, int lowerEndpoint, segment s)
@@ -73,10 +80,17 @@ public:
             eventNode *eventnode = new eventNode(X, Y, upperEndpoint, lowerEndpoint, s);
             if(upperEndpoint){
                 eventnode->U.push_back(s);
+                cout<<"point ("<<X<<", "<<Y<<") inserted into Upper set for segment whose start x cord is :"<<s.pstart.x<<endl;
             }else if(lowerEndpoint){
                 eventnode->L.push_back(s);
-            }else{
+                cout<<"point ("<<X<<", "<<Y<<") inserted into lower set for segment whose start x cord is :"<<s.pstart.x<<endl;
+            }
+            point pnt;
+            pnt.x = X;
+            pnt.y = Y;
+            if(liesOn(pnt,s)){
                 eventnode->C.push_back(s);
+                cout<<"point ("<<X<<", "<<Y<<") inserted into C set for segment whose start x cord is :"<<s.pstart.x<<endl;
             }
             return eventnode;
         }

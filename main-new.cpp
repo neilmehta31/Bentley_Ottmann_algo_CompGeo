@@ -1,6 +1,6 @@
 #include <fstream>
 #include "event_queue.h"
-#include "handleEventPoint.h"
+#include "handelEventPoint-new.h"
 
 int main()
 {
@@ -74,11 +74,11 @@ int main()
     while (!eq.isEmpty(temp)) {
         eventNode *p = eq.getnextEventPoint(temp);
         // cout<<p->X<<" "<<p->Y<<endl;
-        handleEventPoint(statusQueueRoot,p,sq);
+        // handleEventPoint(statusQueueRoot, p, sq);
         temp = eq.deleteNode(temp, p->X, p->Y);
     }
 
-    // fout.open("intersection_points.txt");
+    fout.open("intersection_points.txt");
 
     // for (int i=0; i<intersection_points.size(); i++) {
     // 	fout<<intersection_points[i].x<<" "<<intersection_points[i].y<<endl;
