@@ -80,18 +80,20 @@ public:
             eventNode *eventnode = new eventNode(X, Y, upperEndpoint, lowerEndpoint, s);
             if(upperEndpoint){
                 eventnode->U.push_back(s);
-                cout<<"point ("<<X<<", "<<Y<<") inserted into Upper set for segment whose start x cord is :"<<s.pstart.x<<endl;
+                // cout<<"point ("<<X<<", "<<Y<<") inserted into Upper set for segment whose start x cord is :"<<s.pstart.x<<endl;
             }else if(lowerEndpoint){
                 eventnode->L.push_back(s);
-                cout<<"point ("<<X<<", "<<Y<<") inserted into lower set for segment whose start x cord is :"<<s.pstart.x<<endl;
+                // cout<<"point ("<<X<<", "<<Y<<") inserted into lower set for segment whose start x cord is :"<<s.pstart.x<<endl;
+            }else{
+                eventnode->C.push_back(s);
             }
             point pnt;
             pnt.x = X;
             pnt.y = Y;
-            if(liesOn(pnt,s)){
-                eventnode->C.push_back(s);
-                cout<<"point ("<<X<<", "<<Y<<") inserted into C set for segment whose start x cord is :"<<s.pstart.x<<endl;
-            }
+            // if(liesOn(pnt,s)){
+            //     eventnode->C.push_back(s);
+            //     // cout<<"point ("<<X<<", "<<Y<<") inserted into C set for segment whose start x cord is :"<<s.pstart.x<<endl;
+            // }
             return eventnode;
         }
 

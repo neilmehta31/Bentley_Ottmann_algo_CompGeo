@@ -63,18 +63,18 @@ int main()
         eventQueueRoot = eq.insert(eventQueueRoot, lseg[i].pstart.x, lseg[i].pstart.y, 1, 0, lseg[i]); // 1,0 for p on upper endpoint of the segment
         eventQueueRoot = eq.insert(eventQueueRoot, lseg[i].pend.x,   lseg[i].pend.y,   0, 1, lseg[i]); // 0,1 for p on lower endpoint of the segment
     }
-    // eq.inOrder(eventQueueRoot);
+                // eq.inOrder(eventQueueRoot);
 
-                    // for(auto seg: lseg) {
-                    //     statusQueueRoot = sq.insert(statusQueueRoot, seg);
-                    // }
-                    // sq.inOrder(statusQueueRoot);
+                // for(auto seg: lseg) {
+                //     statusQueueRoot = sq.insert(statusQueueRoot, seg);
+                // }
+                // sq.inOrder(statusQueueRoot);
 
     eventNode *temp = eventQueueRoot;
     while (!eq.isEmpty(temp)) {
         eventNode *p = eq.getnextEventPoint(temp);
-        // cout<<p->X<<" "<<p->Y<<endl;
-        handleEventPoint(statusQueueRoot,p,sq);
+        cout<<"statusQueueRoot in main before passing: "<<statusQueueRoot<<endl;
+        statusQueueRoot = handleEventPoint(statusQueueRoot, p, sq, eq);
         temp = eq.deleteNode(temp, p->X, p->Y);
     }
 

@@ -26,7 +26,7 @@ vector<segment> unionvector(vector<segment> a, vector<segment> b)
 
 void handleEventPoint(statusQueueNode* sqnode, eventNode *evntnode, StatusQueue sq)
 {
-    
+
     // vector<segment> LUC_P;
     // LUC_P = unionvector(evntnode->L,unionvector(evntnode->C,evntnode->U));
     
