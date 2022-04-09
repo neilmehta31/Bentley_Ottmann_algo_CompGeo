@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 #include "eventnode.h"
+#include "helper.h"
 using namespace std;
 
 class EventQueue
@@ -13,6 +14,7 @@ public:
 public:
     eventNode *getnextEventPoint(eventNode *node)
     {
+        int nodecorrect = helper();
         while (node->right != NULL)
         {
             node = node->right;
@@ -77,30 +79,21 @@ public:
     eventNode *insert(eventNode *node, double X, double Y, int upperEndpoint, int lowerEndpoint, segment s)
     {
         if (node == NULL){
+            // cout <<"NULL"<<endl;
             eventNode *eventnode = new eventNode(X, Y, upperEndpoint, lowerEndpoint, s);
-            if(upperEndpoint){
-                eventnode->U.push_back(s);
-                // cout<<"point ("<<X<<", "<<Y<<") inserted into Upper set for segment whose start x cord is :"<<s.pstart.x<<endl;
-            }else if(lowerEndpoint){
-                eventnode->L.push_back(s);
-                // cout<<"point ("<<X<<", "<<Y<<") inserted into lower set for segment whose start x cord is :"<<s.pstart.x<<endl;
-            }else{
-                eventnode->C.push_back(s);
-            }
-            point pnt;
-            pnt.x = X;
-            pnt.y = Y;
-            // if(liesOn(pnt,s)){
-            //     eventnode->C.push_back(s);
-            //     // cout<<"point ("<<X<<", "<<Y<<") inserted into C set for segment whose start x cord is :"<<s.pstart.x<<endl;
-            // }
             return eventnode;
         }
-
-        if (Y < node->Y || (Y == node->Y && X > node->X))
+        cout << node->X <<" "<< node->Y << "  ";
+        if (Y < node->Y || (Y == node->Y && X > node->X)) {
+            // cout << "Left\n";
             node->left = insert(node->left, X, Y, upperEndpoint,lowerEndpoint, s);
-        else if (Y > node->Y || (Y == node->Y && X < node->X))
+        }
+        else if (Y > node->Y || (Y == node->Y && X < node->X)) {
+            // cout << "Right\n";
             node->right = insert(node->right, X, Y, upperEndpoint,lowerEndpoint, s);
+        }
+        else if (Y==node->Y && X==node->X && (node->s.pstart.x!= s.pstart.x || node->s.pstart.y!= s.pstart.y || node->s.pend.x!= s.pend.x || node->s.pend.y!= s.pend.y))
+            node->left = insert(node->left,X, Y, upperEndpoint,lowerEndpoint, s);
         else
             return node;
 
@@ -148,7 +141,8 @@ public:
     void levelOrder(eventNode *root)
     {
         queue<eventNode *> que;
-        que.push(root);
+        if(root)
+            que.push(root);
 
         while (!que.empty())
         {
@@ -177,19 +171,26 @@ public:
     }
 
 public:
-    eventNode *deleteNode(eventNode *root, int X, int Y)
+        eventNode *deleteNode(eventNode *root, double X, double Y)
     {
         if (root == NULL)
             return root;
+        
+        // cout << root->X <<" "<< root->Y <<" | " << X<<" "<< Y << endl;
 
-        if (Y < root->Y || (Y == root->Y && X > root->X))
+        if (root->Y > Y || (Y == root->Y && root->X < X)) {
+            // cout << "1" << endl;
             root->left = deleteNode(root->left, X, Y);
+        }
 
-        else if (Y > root->Y || (Y == root->Y && X < root->X))
+        else if (root->Y < Y || (Y == root->Y && root->X > X)) {
+            // cout << "2" << endl;
             root->right = deleteNode(root->right, X, Y);
-
+        }
+        
         else
         {
+            // cout << "Yaay" << endl;
             if (root->left == NULL)
             {
                 eventNode *temp = root->right;
@@ -210,7 +211,7 @@ public:
                 root->right = deleteNode(root->right, inorderSuccessor->X, inorderSuccessor->Y);
             }
         }
-
+        root = NULL;
         if (root == NULL)
             return root;
 

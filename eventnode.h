@@ -3,10 +3,11 @@
 class eventNode
 {
 public:
-    double X, Y, ht;
+    double X, Y;
+    int ht;
     eventNode *left, *right;
     segment s;
-    int upperEndpoint,lowerEndpoint;
+    int upperEndpoint, lowerEndpoint;
     vector<segment> U;
     vector<segment> L;
     vector<segment> C;

@@ -17,7 +17,7 @@ point findnewEvent(segment sl, segment sr, point p_){
 		double x = (b2 * c1 - b1 * c2) / determinant;
 		double y = (a1 * c2 - a2 * c1) / determinant;
 
-        if(y >= max(sl.pend.y, sr.pend.y) && y <= min(sl.pstart.y, sr.pstart.y) && (y<p_.y || y == p_.y && x>p_.x)) {
+        if(y >= max(sl.pend.y, sr.pend.y) && y <= min(sl.pstart.y, sr.pstart.y) && (y<=p_.y)) {
 			p.x = x;
 			p.y = y;
 		}

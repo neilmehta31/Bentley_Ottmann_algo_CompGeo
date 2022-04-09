@@ -26,23 +26,3 @@ pdd lineLineIntersection(pdd A, pdd B, pdd C, pdd D)
 	else
 		return {FLT_MAX, FLT_MAX};
 }
-
-int main()
-{
-	pdd A = {1, 1};
-	pdd B = {2, 2};
-	pdd C = {3, 7};
-	pdd D = {2, 1};
-
-	pdd intersection = lineLineIntersection(A, B, C, D);
-
-	if (intersection.first == FLT_MAX && intersection.second==FLT_MAX) {
-		cout << "Lines are parallel\n";
-	}
-
-	else {
-		cout << "(" << intersection.first << ", " << intersection.second << ")" << endl;
-	}
-
-	return 0;
-}

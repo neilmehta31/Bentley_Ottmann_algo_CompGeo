@@ -6,17 +6,29 @@ using namespace std;
 class StatusQueue
 {        
 private:
-    int compare (segment s1, segment s2)
+    double compare (segment s1, segment s2)
     {
-        if(s1.pstart.x < s2.pstart.x)
-            return -1;
-        if(s1.pstart.x > s2.pstart.x)
-            return 1;
-        if(s1.pend.x < s2.pend.x)
-            return -1;
-        if(s1.pend.x > s2.pend.x)
-            return 1;
-        return 0;
+        // if(s1.pstart.x < s2.pstart.x)
+        //     return -1;
+        // if(s1.pstart.x > s2.pstart.x)
+        //     return 1;
+        // if(s1.pend.x < s2.pend.x)
+        //     return -1;
+        // if(s1.pend.x > s2.pend.x)
+        //     return 1;
+        // return 0;
+
+        double x2 = s2.pend.x;
+        double x1 = s2.pstart.x;
+        double y2 = s2.pend.y;
+        double y1 = s2.pstart.y;
+
+        double xi = ((x2-x1)*(s1.pstart.y-y2)/(y2-y1))+x2;
+        // cout <<"x2="<<x2<<" y2="<<y2<<" x1="<<x1<<" y1="<<y1<<endl;
+        // cout <<"y="<<s1.pstart.y<<" ";
+        // cout <<"X Decider: "<< xi << endl;
+        // cout <<"Return: "<<s1.pstart.x-xi << endl;
+        return s1.pstart.x-xi;
     }
 
 private:
@@ -62,14 +74,21 @@ private:
 public:
     statusQueueNode* insert(statusQueueNode* node, segment s)
     {
-        if (node == NULL)
+        if (node == NULL) {
+            // cout << "Inserted\n";
             return new statusQueueNode(s);
+        }
         
-        int compared_val = compare(s, node->seg);
-        if (compared_val < 0)
+        double compared_val = compare(s, node->seg);
+        // cout << "Compared val: "<< compared_val << endl;
+        if (compared_val < 0 || (compared_val == 0 && node->seg.pend.x > s.pend.x)) {
+            // cout << "To left\n";
             node->left = insert(node->left, s);
-        else if (compared_val > 0)
+        }
+        else if (compared_val > 0 || (compared_val == 0 && node->seg.pend.x < s.pend.x)) {
+            // cout << "To right\n";
             node->right = insert(node->right, s);
+        }
         else
             return node;
 
@@ -195,17 +214,15 @@ private:
 private:
     statusQueueNode* getLeftNeighbor(statusQueueNode* root, statusQueueNode* n)
     {
+        // if(n == NULL)
+        //     return NULL;
         if (n->left != NULL)
             return getMaxValue(n->left);
     
         statusQueueNode* pred = root;
 
         while (root != NULL) {
-            int compare_val = compare(n->seg, root->seg);
-
-            cout <<"("<< (*root).seg.pstart.x <<","<< (*root).seg.pstart.y <<" "<< (*root).seg.pend.x <<","<<(*root).seg.pend.y <<") ";
-            cout << compare_val <<"_ ";
-            cout << pred <<" |";
+            double compare_val = compare(n->seg, root->seg);
 
             if (compare_val < 0)
                 root = root->left;
@@ -224,6 +241,8 @@ private:
 private:
     statusQueueNode* getRightNeighbor(statusQueueNode* root, statusQueueNode* n)
     {
+        // if(n == NULL)
+        //     return NULL;
         if (n->right != NULL)
             return getMinValue(n->right);
     
@@ -231,12 +250,7 @@ private:
 
         while (root != NULL) {
 
-            int compare_val = compare(n->seg, root->seg);
-
-            cout <<"("<< (*root).seg.pstart.x <<","<< (*root).seg.pstart.y <<" "<< (*root).seg.pend.x <<","<<(*root).seg.pend.y <<") ";
-            cout << compare_val <<"_ ";
-            cout << succ <<" |";
-            
+            double compare_val = compare(n->seg, root->seg);
 
             if (compare_val < 0)
             {
@@ -276,16 +290,30 @@ public:
 
 public:
     statusQueueNode* getAddress(statusQueueNode* root, segment seg) {
-        if(root == NULL)
-            return NULL;
-        int compare_val = compare(root->seg, seg);
         
-        if(compare_val < 0) 
-            return getAddress(root->right, seg);
-        else if(compare_val > 0) 
-            return getAddress(root->left, seg);
-        else
+        if(root == NULL) {
             return root;
+        }
+
+        double compared_val = compare(root->seg, seg);
+        cout << root->seg.pstart.x <<","<< root->seg.pstart.y <<" "<<root->seg.pend.x<<","<<root->seg.pend.y<<endl;
+        cout << seg.pstart.x <<","<< seg.pstart.y <<" "<<seg.pend.x<<","<<seg.pend.y<<endl;
+        cout << "compared_val: " << compared_val << endl;
+        
+        if(compared_val < 0 || (compared_val == 0 && seg.pend.x > root->seg.pend.x)) {
+            cout << "left\n";
+            return getAddress(root->left, seg);
+        }
+        else if(compared_val > 0 || (compared_val == 0 && seg.pend.x < root->seg.pend.x)) {
+            cout << "right\n";
+            return getAddress(root->right, seg);
+        }
+        else {
+            cout << "got it\n";
+            return root;
+        }
+
+        return root;
     }
 };
 

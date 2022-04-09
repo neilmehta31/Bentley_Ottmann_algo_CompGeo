@@ -7,101 +7,190 @@ vector<point> intersections;
 vector<segment> unionvector(vector<segment> a, vector<segment> b)
 {
     vector<segment> uni;
-    for (auto seg : a) {
+    for (auto seg : a)
+    {
         uni.push_back(seg);
     }
-    for (auto segb : b) {
+    for (auto segb : b)
+    {
         bool uniq = true;
-        for (auto segu : uni) {
-            if (segb.pstart.x == segu.pstart.x && segb.pstart.y == segu.pstart.y && segb.pend.x == segu.pend.x && segb.pend.y == segu.pend.y) {
+        for (auto segu : uni)
+        {
+            if (segb.pstart.x == segu.pstart.x && segb.pstart.y == segu.pstart.y && segb.pend.x == segu.pend.x && segb.pend.y == segu.pend.y)
+            {
                 uniq = false;
             }
         }
-        if(uniq) {
+        if (uniq)
+        {
             uni.push_back(segb);
         }
     }
     return uni;
 }
 
-void handleEventPoint(statusQueueNode* sqnode, eventNode *evntnode, StatusQueue sq)
+void **handleEventPoint(statusQueueNode *sqnode, eventNode *evntnode, StatusQueue sq, EventQueue eq, eventNode *root)
 {
 
-    // vector<segment> LUC_P;
-    // LUC_P = unionvector(evntnode->L,unionvector(evntnode->C,evntnode->U));
-    
-    // point pnt;
-    // pnt.x = evntnode->X;
-    // pnt.y = evntnode->Y;   
-    
-    // if (LUC_P.size() > 1) {
-    //     intersections.push_back(pnt);
-    // }
+    point pnt;
+    pnt.x = evntnode->X;
+    pnt.y = evntnode->Y;
+    // cout<<"POINT: "<<pnt.x<<" "<<pnt.y<<endl;
 
-    // vector<segment> LC_P;
-    // LC_P = unionvector(evntnode->L,evntnode->C);
-    // for (auto lc_seg : LC_P) {
-    //     sqnode = sq.deleteNode(sqnode,lc_seg);
-    // }
+    if(evntnode->upperEndpoint == 1) {
+        cout <<"TOP Pt---------"<<endl;
 
-    // vector<segment> UC_P;
-    // UC_P = unionvector(evntnode->U,evntnode->C);
-    // for(auto uc_seg: UC_P){
-    //     sq.insert(sqnode,uc_seg);
-    // }
+        cout << "SQ inorder: ";
+        sq.inOrder(sqnode); cout << endl;
 
-    // for (auto a:UC_P){
-    //     cout<<a.pstart.x<<endl;
-    // }
-    // cout<<"\thELleo\n";
-    
-    // if(UC_P.size()==0){
-    //     segment sl,sr;//sl and sr be the left and right neighbors of p in StatusQueue.
-    //     vector<statusQueueNode *> p_neighbours;//0 for left neighbour and 1 for right neighbour.
-    //     // statusQueueNode* seg = getRightmostval(sqnode);
-    //     segment seg = evntnode->s;
-    //     statusQueueNode* segpointer = sq.getAddress(sqnode,seg);
-    //     p_neighbours = sq.getNeighbors(sqnode,segpointer);
-    //     sl = p_neighbours[0]->seg;
-    //     sr = p_neighbours[1]->seg;
-    //     cout<<"sl, sr : "<<sl<<", "<<sr<<endl;
-    //     cout<<"if statement of handle Event point";
-    //     // if(sl)
-    //     findnewEvent(sl,sr,pnt);
-    // }
-    // else{
-    //     segment sdash,sdoubledash;
-    //     double min_x = DBL_MAX;
-    //     double max_x = DBL_MIN;
-    //     for(auto uc_seg:UC_P){
-    //         if(min_x > uc_seg.pstart.x){
-    //             min_x = uc_seg.pstart.x;
-    //             sdash = uc_seg;
-    //         }
-    //         if(min_x > uc_seg.pend.x){
-    //             min_x = uc_seg.pend.x;
-    //             sdash = uc_seg;
-    //         }
-    //         if(max_x < uc_seg.pstart.x){
-    //             max_x = uc_seg.pstart.x;
-    //             sdoubledash = uc_seg;
-    //         }
-    //         if(max_x < uc_seg.pend.x){
-    //             max_x = uc_seg.pend.x;
-    //             sdoubledash = uc_seg;
-    //         }
-    //     }
-    //     vector<statusQueueNode *> sdash_neighbours,sdoubledash_neighbours;//0 for left neighbour and 1 for right neighbour.
-    //     segment sl_dash,sr_doubledash;
-    //     statusQueueNode* segpointer = sq.getAddress(sqnode,sdash);
-    //     sdash_neighbours = sq.getNeighbors(sqnode,segpointer);
-    //     sl_dash = sdash_neighbours[0]->seg;
-    //     // findnewEvent(sl_dash,sdash,pnt);
-    //     // cout<<"hello from else of handel Event point";
+        // insert segment
+        sqnode = sq.insert(sqnode, evntnode->s);
+
+        cout << "SQ inorder: ";
+        sq.inOrder(sqnode); cout << endl;
+
+        // get neighbours
+        statusQueueNode *segpointer = sq.getAddress(sqnode, evntnode->s);
+        vector<statusQueueNode *>neighbours = sq.getNeighbors(sqnode, segpointer);
+        cout << "Neighbours Start Pt" << endl;
+        cout <<"Segpointer: "<<segpointer << endl;
         
-    //     segpointer = sq.getAddress(sqnode,sdoubledash);
-    //     sdoubledash_neighbours = sq.getNeighbors(sqnode,segpointer);
-    //     sr_doubledash = sdoubledash_neighbours[1]->seg;
-    //     // findnewEvent(sdoubledash,sr_doubledash,pnt);
-    // }
+        if(neighbours[0]!=NULL) {
+            cout << "LEFT NEIGHBOUR: ";
+            cout <<"("<<neighbours[0]->seg.pstart.x<<","<<neighbours[0]->seg.pstart.y<<") and ("<<neighbours[0]->seg.pend.x<<","<<neighbours[0]->seg.pend.y<<")"<<endl;
+            
+            point p = findnewEvent(neighbours[0]->seg, evntnode->s, pnt);
+            cout << "Event Pt: " << p.x <<" "<< p.y << endl;
+
+            if(!(p.x == FLT_MAX && p.y == FLT_MAX)){
+                bool present = false;
+                root = eq.insert(root, p.x, p.y, 0, 0, neighbours[0]->seg);
+                root = eq.insert(root, p.x, p.y, 0, 0, evntnode->s);
+                intersections.push_back(p);
+            }
+        }
+        if(neighbours[1]!=NULL) {
+            cout << "RIGHT NEIGHBOUR: ";
+            cout <<"("<<neighbours[1]->seg.pstart.x<<","<<neighbours[1]->seg.pstart.y<<") and ("<<neighbours[1]->seg.pend.x<<","<<neighbours[1]->seg.pend.y<<")"<<endl;
+            
+            point p = findnewEvent(neighbours[1]->seg, evntnode->s, pnt);
+            cout << "Event Pt: " << p.x <<" "<< p.y << endl;
+
+            // cout << "\n>>EQ Level Order: ";
+            // eq.levelOrder(root);
+            // cout << ">>EQ inOrder: ";
+            // eq.inOrder(root); cout << endl;
+            if(!(p.x == FLT_MAX && p.y == FLT_MAX)){
+                root = eq.insert(root, p.x, p.y, 0, 0, neighbours[1]->seg);
+                root = eq.insert(root, p.x, p.y, 0, 0, evntnode->s);
+                intersections.push_back(p);
+            }
+
+            // cout << "\n>>>EQ Level Order: ";
+            // eq.levelOrder(root);
+            // cout << ">>>EQ inOrder: ";
+            // eq.inOrder(root); cout << endl;
+        }
+
+        cout << "Neighbours Handled, Done TOP Pt---------\n";
+    }
+
+    else if(evntnode->lowerEndpoint == 1) {
+        cout <<"delete"<<endl;
+        // cout <<"sq & eq "<< sqnode <<" "<< evntnode->s.pstart.y << endl;
+        statusQueueNode *segpointer = sq.getAddress(sqnode, evntnode->s);
+
+        if(segpointer != NULL) {
+            cout << segpointer << endl;
+            vector<statusQueueNode *>neighbours = sq.getNeighbors(sqnode, segpointer);
+
+            sqnode = sq.deleteNode(sqnode, evntnode->s);
+
+            if(neighbours[0]!=NULL && neighbours[1]!=NULL) {
+                cout << "New Neighbour while deletion\n";
+                point p = findnewEvent(neighbours[0]->seg, neighbours[1]->seg, pnt);
+
+                if(!(p.x == FLT_MAX && p.y == FLT_MAX)) {
+                    evntnode = eq.insert(evntnode, p.x, p.y, 0, 0, neighbours[0]->seg);
+                    evntnode = eq.insert(evntnode, p.x, p.y, 0, 0, neighbours[1]->seg);    
+                    intersections.push_back(p);
+                }
+            }
+        }
+
+    }
+
+    else if(evntnode->lowerEndpoint == 0 && evntnode->upperEndpoint == 0 ) {
+        cout <<"MID Pt"<<endl;
+        
+        cout << "SQ inorder before deleting: ";
+        sq.inOrder(sqnode); cout << endl;
+        
+        sqnode = sq.deleteNode(sqnode, evntnode->s);
+        
+        cout << "SQ inorder after deleting: ";
+        sq.inOrder(sqnode); cout << endl;
+        
+        segment seg_new1;
+        seg_new1.pend.x = evntnode->s.pend.x;;
+        seg_new1.pend.y = evntnode->s.pend.y;
+        seg_new1.pstart.x = pnt.x;
+        seg_new1.pstart.y = pnt.y;
+        cout << seg_new1.pstart.x<<","<<seg_new1.pstart.y<<" "<<seg_new1.pend.x<<","<<seg_new1.pend.y<<endl;
+        
+        sqnode = sq.insert(sqnode, seg_new1);
+
+        cout << "SQ inorder after inserting: ";
+        sq.inOrder(sqnode); cout << endl;
+
+        // get neighbours
+        cout << "Neighbours Start Pt" << endl;
+        cout << "start\n";
+        statusQueueNode *segpointer = sq.getAddress(sqnode, seg_new1);
+        cout << "end\n";
+
+        cout << "Segment to get neighbour: ";
+        cout << segpointer->seg.pstart.x <<","<< segpointer->seg.pstart.y <<" "<< segpointer->seg.pend.x <<","<< segpointer->seg.pend.y << endl;
+        cout <<"Segpointer: "<<segpointer << endl;
+        vector<statusQueueNode *>neighbours = sq.getNeighbors(sqnode, segpointer);
+        
+        if(neighbours[0]!=NULL) {
+            cout << "LEFT NEIGHBOUR: ";
+            cout <<"("<<neighbours[0]->seg.pstart.x<<","<<neighbours[0]->seg.pstart.y<<") and ("<<neighbours[0]->seg.pend.x<<","<<neighbours[0]->seg.pend.y<<")"<<endl;
+            
+            point p = findnewEvent(neighbours[0]->seg, seg_new1, pnt);
+            cout << "Event Pt: " << p.x <<" "<< p.y << endl;
+
+            if(!(p.x == FLT_MAX && p.y == FLT_MAX)){
+                bool present = false;
+                root = eq.insert(root, p.x, p.y, 0, 0, neighbours[0]->seg);
+                root = eq.insert(root, p.x, p.y, 0, 0, seg_new1);
+                intersections.push_back(p);
+            }
+        }
+        if(neighbours[1]!=NULL) {
+            cout << "RIGHT NEIGHBOUR: ";
+            cout <<"("<<neighbours[1]->seg.pstart.x<<","<<neighbours[1]->seg.pstart.y<<") and ("<<neighbours[1]->seg.pend.x<<","<<neighbours[1]->seg.pend.y<<")"<<endl;
+            
+            point p = findnewEvent(neighbours[1]->seg, seg_new1, pnt);
+            cout << "Event Pt: " << p.x <<" "<< p.y << endl;
+
+            if(!(p.x == FLT_MAX && p.y == FLT_MAX)){
+                root = eq.insert(root, p.x, p.y, 0, 0, neighbours[1]->seg);
+                root = eq.insert(root, p.x, p.y, 0, 0, seg_new1);
+                intersections.push_back(p);
+            }
+        }
+        
+
+        cout << "Neighbours Handled, Done TOP Pt---------\n";
+    }
+    else {
+        cout << "excetion: none of 3" << endl;
+    }
+    
+    void** val = new void*[2];
+    val[0] = (void*)sqnode;
+    val[1] = (void*)root;
+    return val;
 }

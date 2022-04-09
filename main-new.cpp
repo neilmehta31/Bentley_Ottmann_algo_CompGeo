@@ -1,4 +1,3 @@
-#include <fstream>
 #include "event_queue.h"
 #include "handelEventPoint-new.h"
 
@@ -10,9 +9,8 @@ int main()
     ofstream fout;
 
     double x1, y1, x2, y2;
-    fin.open("input.txt");
-
-    vector<segment> lseg; // Line segments array
+    fin.open("testcases.txt");
+    vector<segment> lseg;
 
     while (!fin.eof())
     {
@@ -52,47 +50,33 @@ int main()
     }
     fin.close();
 
-    point p_ = {.x = 10, .y = -1};
-    point p = findnewEvent(lseg[1], lseg[0], p_);
-    if(!(p.x == FLT_MAX && p.y == FLT_MAX)) {
-        // add event
+    eventNode *eventQueueRoot = NULL;
+    statusQueueNode* statusQueueRoot = NULL;
+
+    for (int i = 0; i < lseg.size(); i++) {  
+        eventQueueRoot = eq.insert(eventQueueRoot, lseg[i].pstart.x, lseg[i].pstart.y, 1, 0, lseg[i]); // 1,0 for p on upper endpoint of the segment
+        eventQueueRoot = eq.insert(eventQueueRoot, lseg[i].pend.x,   lseg[i].pend.y,   0, 1, lseg[i]); // 0,1 for p on lower endpoint of the segment
     }
-    // cout << p.x <<" "<< p.y << endl;
 
-                    // for(auto it: lseg){
-                    //     cout<<it.pstart.x <<" "<< it.pstart.y <<", "<< it.pend.x <<" "<< it.pend.y << endl;
-                    // }
+    eventNode *temp = eventQueueRoot;
+    while (!eq.isEmpty(temp) || temp != NULL) {
+        eventNode *p = eq.getnextEventPoint(temp);
+        double xi = p->X, yi = p->Y;
 
-    // Find intersections!
-    // eventNode *eventQueueRoot = NULL;
-    // statusQueueNode* statusQueueRoot = NULL;
+        void** returnVal = handleEventPoint(statusQueueRoot, p, sq, eq, temp);
+        statusQueueRoot = (statusQueueNode*)returnVal[0];
+        temp = (eventNode*)returnVal[1];
+        temp = eq.deleteNode(temp, xi, yi);
+    }
 
-    // for (int i = 0; i < lseg.size(); i++) {  
-    //     eventQueueRoot = eq.insert(eventQueueRoot, lseg[i].pstart.x, lseg[i].pstart.y, 1, 0, lseg[i]); // 1,0 for p on upper endpoint of the segment
-    //     eventQueueRoot = eq.insert(eventQueueRoot, lseg[i].pend.x,   lseg[i].pend.y,   0, 1, lseg[i]); // 0,1 for p on lower endpoint of the segment
-    // }
-    // eq.inOrder(eventQueueRoot);
+    fout.open("output.txt");
+    cout<<"Intersection Points: "<<endl;
+    for(auto it:intersection_points){
+        cout<<" ("<<it.first.first<<","<<it.first.second<<")\n";
+        fout<<it.first.first<<" "<<it.first.second<<endl;
+    }
 
-                    // for(auto seg: lseg) {
-                    //     statusQueueRoot = sq.insert(statusQueueRoot, seg);
-                    // }
-                    // sq.inOrder(statusQueueRoot);
-
-    // eventNode *temp = eventQueueRoot;
-    // while (!eq.isEmpty(temp)) {
-    //     eventNode *p = eq.getnextEventPoint(temp);
-    //     // cout<<p->X<<" "<<p->Y<<endl;
-    //     // handleEventPoint(statusQueueRoot, p, sq);
-    //     temp = eq.deleteNode(temp, p->X, p->Y);
-    // }
-
-    // fout.open("intersection_points.txt");
-
-    // for (int i=0; i<intersection_points.size(); i++) {
-    // 	fout<<intersection_points[i].x<<" "<<intersection_points[i].y<<endl;
-    // }
-
-    // fout.close();
+    fout.close();
 
     return 0;
 }

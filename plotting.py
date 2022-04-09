@@ -1,15 +1,28 @@
-import numpy as np
-import pylab as pl
-from matplotlib import collections  as mc
+import matplotlib.pyplot as plt
+from matplotlib.collections import LineCollection
 
+lines=[]
+with open("testcases.txt") as inputfile:
+    for segment in inputfile:
+        x1,y1,x2,y2 = segment.split()
+        # print(x1,y1,x2,y2)
+        lines.append([(float(x1),float(y1)),(float(x2),float(y2))])
+# print(lines)
 
+lc = LineCollection(lines,zorder=1,label="Line segments")
+fig = plt.figure()
 
-lines = [[(1, 1), (2, 4)], [(1, 2), (3, 1)], [(1, 4), (3, 2)]]
-c = np.array([(1, 0, 0, 1), (0, 1, 0, 1), (0, 0, 1, 1)])
+ax1 = fig.add_subplot(1, 1, 1)
+ax1.add_collection(lc)
+ax1.autoscale()
 
-lc = mc.LineCollection(lines, colors=c, linewidths=2)
-fig, ax = pl.subplots()
-ax.add_collection(lc)
-ax.autoscale()
-ax.margins(0.1)
-pl.show()
+x_intersections = []
+y_intersections = []
+with open("output.txt") as points:
+    for point in points:
+        x,y = point.split()
+        x_intersections.append(float(x))
+        y_intersections.append(float(y))
+ax1.scatter(x_intersections, y_intersections, c='r',label="Intersection Points")
+plt.legend()
+plt.show()
