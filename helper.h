@@ -47,6 +47,8 @@ bool get_line_intersection(Segment *p, Segment *q, double *i_x, double *i_y)
   }
 int helper()
 {
+    time_t start,end;
+    time(&start);
     vector<Segment*> segments;
     fstream newfile;
     newfile.open("testcases.txt",ios::in); 
@@ -84,5 +86,7 @@ int helper()
             }
         }
     }
+    time(&start);
+    
     return 1;
 }

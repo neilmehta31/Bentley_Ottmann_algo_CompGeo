@@ -7,6 +7,7 @@ int main()
     StatusQueue sq;
     ifstream fin;
     ofstream fout;
+    clock_t start,end;
 
     double x1, y1, x2, y2;
     fin.open("testcases.txt");
@@ -50,6 +51,7 @@ int main()
     }
     fin.close();
 
+    start = clock();
     eventNode *eventQueueRoot = NULL;
     statusQueueNode* statusQueueRoot = NULL;
 
@@ -59,6 +61,7 @@ int main()
     }
 
     eventNode *temp = eventQueueRoot;
+
     while (!eq.isEmpty(temp) || temp != NULL) {
         eventNode *p = eq.getnextEventPoint(temp);
         double xi = p->X, yi = p->Y;
@@ -68,13 +71,25 @@ int main()
         temp = (eventNode*)returnVal[1];
         temp = eq.deleteNode(temp, xi, yi);
     }
+    end = clock();
 
+    if(intersection_points.size()){
     fout.open("output.txt");
     cout<<"Intersection Points: "<<endl;
     for(auto it:intersection_points){
         cout<<" ("<<it.first.first<<","<<it.first.second<<")\n";
         fout<<it.first.first<<" "<<it.first.second<<endl;
     }
+    }else{
+        cout<<"No Intersection Points Detected."<<endl;
+    }
+    
+    cout<<"\n\n";
+
+    double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
+    cout << "Time taken by program is : " << fixed 
+         << time_taken << setprecision(5);
+    cout << " sec " << endl;
 
     fout.close();
 

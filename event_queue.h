@@ -83,7 +83,7 @@ public:
             eventNode *eventnode = new eventNode(X, Y, upperEndpoint, lowerEndpoint, s);
             return eventnode;
         }
-        cout << node->X <<" "<< node->Y << "  ";
+        // cout << node->X <<" "<< node->Y << "  ";
         if (Y < node->Y || (Y == node->Y && X > node->X)) {
             // cout << "Left\n";
             node->left = insert(node->left, X, Y, upperEndpoint,lowerEndpoint, s);

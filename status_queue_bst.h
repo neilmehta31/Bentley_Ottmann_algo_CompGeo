@@ -296,20 +296,20 @@ public:
         }
 
         double compared_val = compare(root->seg, seg);
-        cout << root->seg.pstart.x <<","<< root->seg.pstart.y <<" "<<root->seg.pend.x<<","<<root->seg.pend.y<<endl;
-        cout << seg.pstart.x <<","<< seg.pstart.y <<" "<<seg.pend.x<<","<<seg.pend.y<<endl;
-        cout << "compared_val: " << compared_val << endl;
+        // cout << root->seg.pstart.x <<","<< root->seg.pstart.y <<" "<<root->seg.pend.x<<","<<root->seg.pend.y<<endl;
+        // cout << seg.pstart.x <<","<< seg.pstart.y <<" "<<seg.pend.x<<","<<seg.pend.y<<endl;
+        // cout << "compared_val: " << compared_val << endl;
         
         if(compared_val < 0 || (compared_val == 0 && seg.pend.x > root->seg.pend.x)) {
-            cout << "left\n";
+            // cout << "left\n";
             return getAddress(root->left, seg);
         }
         else if(compared_val > 0 || (compared_val == 0 && seg.pend.x < root->seg.pend.x)) {
-            cout << "right\n";
+            // cout << "right\n";
             return getAddress(root->right, seg);
         }
         else {
-            cout << "got it\n";
+            // cout << "got it\n";
             return root;
         }
 
